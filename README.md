@@ -2,6 +2,13 @@
 
 I will write some todo here as instructions:
 
+# Environment
+Use conda to create a new environment. Please use environment.yml to create a new environment.
+```bash
+conda env create -f environment.yml
+```
+
+
 # Crystal Detection
 
 The first step is to detect all crystal from raw images. raw images located under /dataset. All the outputs is under /output
