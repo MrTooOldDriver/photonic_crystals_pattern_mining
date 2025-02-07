@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 
 SUB_TRACK_OUTSIDE = True
 
-def image_preprocessing():
+def image_preprocessing(path_dir = './dataset'):
 
     def find_circle_threshold_ver(image_path, TARGET_IMAGE_SIZE):
         # preprocess
@@ -192,9 +192,9 @@ def image_preprocessing():
         return ax
 
 
+
     print('cv_locator start')
     TARGET_IMAGE_SIZE = (1000, 1000)
-    path_dir = './dataset'
     data_dir = pathlib.Path(path_dir)
     image_count = len(list(data_dir.glob('*/*.jpg')))
     print(str(image_count) + 'images found')
