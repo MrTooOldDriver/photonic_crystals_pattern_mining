@@ -34,6 +34,8 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
                         rotation_aug = False, experiment_with_gray_scale = True, use_entire_dataset = True, 
                         load_all_images = False, use_height_map = True, distraction_merge = False, 
                         distraction_merge_to_one = False, original_merge_to_one = False, 
+                        rotation_aug_lower = 150, rotation_aug_upper = 350,
+                        nonrotation_aug_lower = 50, nonrotation_aug_upper = 450,
                         molecular_imprinting_name = 'MPA'):
 
     data_dir = pathlib.Path(img_path)
@@ -138,7 +140,7 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
                 rotated_image = cv2.warpAffine(src=src, M=rotate_matrix, dsize=(width, height))
                 resize_image = cv2.resize(src=src, dsize=(int(width / 2), int(height / 2)))
                 # crop image 200x200
-                resize_image = resize_image[150:350, 150:350]
+                resize_image = resize_image[rotation_aug_lower:rotation_aug_upper, rotation_aug_lower:rotation_aug_upper]
                 if use_height_map:
                     height_map = generate_height_map(200)
                     resize_image = np.dstack((resize_image.astype(np.float32), height_map))
@@ -148,7 +150,7 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
         else:
             resize_image = cv2.resize(src=src, dsize=(int(width / 2), int(height / 2)))
             # crop image 200x200
-            resize_image = resize_image[50:450, 50:450]
+            resize_image = resize_image[nonrotation_aug_lower:nonrotation_aug_upper, nonrotation_aug_lower:nonrotation_aug_upper]
             if use_height_map:
                 height_map = generate_height_map(400)
             else:
@@ -191,20 +193,18 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
 
 
 class data_mining: 
-    def method_1(self, x, y, color_discrete_map = None):
+    def method_1(self, x, y, color_discrete_map = {
+        "DMMP": [255, 0, 0],  # Red
+        "NaBF4": [0, 255, 0],  # Green
+        "KF6P": [0, 0, 255],  # Blue
+        "MPA": [255, 165, 42],  # Goldenrod
+        "MP": [128, 0, 128]  # Purple
+    }, image_center = [200, 200], angle_bin = 20, radii_limit = 200):
         # Assuming x and y are defined properly
         # x should be a list of arrays with shape (N, 2), where N is the number of keypoints
         # y should be a list of strings corresponding to the labels of each point in x
 
-        # Corrected color map in RGB format
-        if (color_discrete_map == None):
-            color_discrete_map = {
-                "DMMP": [255, 0, 0],  # Red
-                "NaBF4": [0, 255, 0],  # Green
-                "KF6P": [0, 0, 255],  # Blue
-                "MPA": [255, 165, 42],  # Goldenrod
-                "MP": [128, 0, 128]  # Purple
-            }
+        
 
         # fig = plt.figure(figsize=(10, 10))
 
@@ -214,10 +214,6 @@ class data_mining:
         coordinates_color = {}
         
         coordinates_list = []
-
-        image_center = [200, 200]
-
-        angle_bin = 20
 
         alignment = True
 
@@ -232,7 +228,7 @@ class data_mining:
             angles_in_degree = np.rad2deg(angles)
             radii = np.hypot(shifted_coordinates[:, 0], shifted_coordinates[:, 1])
             
-            radii_filter_indices = np.where(radii <= 200)
+            radii_filter_indices = np.where(radii <= radii_limit)
             
             hist, edges = np.histogram(angles_in_degree, bins=angle_bin)
             angles_hist_min_index = np.argmin(hist)
@@ -269,12 +265,12 @@ class data_mining:
         return coordinates_color, coordinates_list
     
     
-    def method_2(self, x):
+    def method_2(self, x, bins = (10, 10), mesh_limit = 200):
         # Extract keypoints from x array
         all_keypoints = np.vstack(x)
 
         # Create a 3D histogram
-        hist, edges = np.histogramdd(all_keypoints, bins=(10, 10))
+        hist, edges = np.histogramdd(all_keypoints, bins=bins)
 
         # Prepare the grid for plotting
         x_edges, y_edges = edges
@@ -286,7 +282,7 @@ class data_mining:
 
         for i in range(len(x_mesh)):
                 for j in range(len(y_mesh)):
-                    if np.hypot(x_mesh[i][j]-200, y_mesh[i][j]-200) > 200:
+                    if np.hypot(x_mesh[i][j]-mesh_limit, y_mesh[i][j]-mesh_limit) > mesh_limit:
                         hist[i][j] = np.nan
 
         # Flatten the arrays for plotting
@@ -586,19 +582,19 @@ class data_visualization:
         plt.show()
 
 
+if __name__ == "__main__":
+    molecular_imprinting_name = 'MPA'
+    data_miner = data_mining()
+    data_visual = data_visualization()
 
-molecular_imprinting_name = 'MPA'
-data_miner = data_mining()
-data_visual = data_visualization()
+    x, y = image_preprocessing()
+    coordinates_color, coordinates_list = data_miner.method_1(x, y)
+    data_visual.method_1(coordinates_list)
+    data_visual.method_2(coordinates_color)
 
-x, y = image_preprocessing()
-coordinates_color, coordinates_list = data_miner.method_1(x, y)
-data_visual.method_1(coordinates_list)
-data_visual.method_2(coordinates_color)
+    x_flat, y_flat, hist_flat = data_miner.method_2(x)
+    data_visual.method_3(x_flat, y_flat, hist_flat)
 
-x_flat, y_flat, hist_flat = data_miner.method_2(x)
-data_visual.method_3(x_flat, y_flat, hist_flat)
-
-data_visual.method_4(coordinates_color)
-print("here")
-data_visual.method_5()
+    data_visual.method_4(coordinates_color)
+    print("here")
+    data_visual.method_5()

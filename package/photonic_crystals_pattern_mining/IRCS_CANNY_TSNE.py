@@ -158,11 +158,11 @@ class data_visualization:
 
 
 
+if __name__ == "__main__":
+    molecular_imprinting_name = 'DMMP'
+    data_miner = data_mining()
+    data_visual = data_visualization()
 
-molecular_imprinting_name = 'DMMP'
-data_miner = data_mining()
-data_visual = data_visualization()
-
-x, y, resize_x = image_preprocessing()
-df = data_miner.method_1(x, y)
-data_visual.method_1(df, molecular_imprinting_name, resize_x)
+    x, y, resize_x = image_preprocessing()
+    df = data_miner.method_1(x, y)
+    data_visual.method_1(df, molecular_imprinting_name, resize_x)

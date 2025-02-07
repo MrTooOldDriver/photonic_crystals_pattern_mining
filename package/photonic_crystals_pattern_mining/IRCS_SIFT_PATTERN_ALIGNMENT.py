@@ -666,25 +666,25 @@ class data_visualization:
 
 
 # EXAMPLE USE CASE
+if __name__ == "__main__":
+    molecular_imprinting_name = 'DMMP'
+    data_miner = data_mining()
+    data_visual = data_visualization()
 
-molecular_imprinting_name = 'DMMP'
-data_miner = data_mining()
-data_visual = data_visualization()
+    x, y = image_preprocessing()
 
-x, y = image_preprocessing()
+    all_angles_classes, angle_bin, all_radii_classes, radii_bin, color_discrete_map = data_miner.method_1(x, y)
+    data_visual.method_1(all_angles_classes, angle_bin, all_radii_classes, radii_bin, color_discrete_map, molecular_imprinting_name)
 
-all_angles_classes, angle_bin, all_radii_classes, radii_bin, color_discrete_map = data_miner.method_1(x, y)
-data_visual.method_1(all_angles_classes, angle_bin, all_radii_classes, radii_bin, color_discrete_map, molecular_imprinting_name)
+    all_angles_classes, angle_bin, color_discrete_map = data_miner.method_2(x, y)
+    data_visual.method_2(all_angles_classes, angle_bin, color_discrete_map, molecular_imprinting_name)
 
-all_angles_classes, angle_bin, color_discrete_map = data_miner.method_2(x, y)
-data_visual.method_2(all_angles_classes, angle_bin, color_discrete_map, molecular_imprinting_name)
+    all_radii_classes, radii_bin, color_discrete_map = data_miner.method_3(x, y)
+    data_visual.method_3(all_radii_classes, radii_bin, color_discrete_map, molecular_imprinting_name)
 
-all_radii_classes, radii_bin, color_discrete_map = data_miner.method_3(x, y)
-data_visual.method_3(all_radii_classes, radii_bin, color_discrete_map, molecular_imprinting_name)
+    all_radii_classes, radii_bin, color_discrete_map = data_miner.method_4(x, y)
+    data_visual.method_4(all_angles_classes, angle_bin, color_discrete_map, molecular_imprinting_name)
 
-all_radii_classes, radii_bin, color_discrete_map = data_miner.method_4(x, y)
-data_visual.method_4(all_angles_classes, angle_bin, color_discrete_map, molecular_imprinting_name)
+    data_visual.method_5()
 
-data_visual.method_5()
-
-data_visual.method_6()
+    data_visual.method_6()

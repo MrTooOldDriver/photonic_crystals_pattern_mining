@@ -35,6 +35,8 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
                         rotation_aug = False, experiment_with_gray_scale = True, use_entire_dataset = True, 
                         load_all_images = False, use_height_map = True, distraction_merge = False, 
                         distraction_merge_to_one = False, original_merge_to_one = False, 
+                        rotation_aug_lower = 150, rotation_aug_upper = 350,
+                        nonrotation_aug_lower = 50, nonrotation_aug_upper = 450,
                         molecular_imprinting_name = 'MP'):
 
     data_dir = pathlib.Path(img_path)
@@ -140,7 +142,7 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
                 rotated_image = cv2.warpAffine(src=src, M=rotate_matrix, dsize=(width, height))
                 resize_image = cv2.resize(src=src, dsize=(int(width / 2), int(height / 2)))
                 # crop image 200x200
-                resize_image = resize_image[150:350, 150:350]
+                resize_image = resize_image[rotation_aug_lower:rotation_aug_upper, rotation_aug_lower:rotation_aug_upper]
                 if use_height_map:
                     height_map = generate_height_map(200)
                     resize_image = np.dstack((resize_image.astype(np.float32), height_map))
@@ -150,7 +152,7 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
         else:
             resize_image = cv2.resize(src=src, dsize=(int(width / 2), int(height / 2)))
             # crop image 200x200
-            resize_image = resize_image[50:450, 50:450]
+            resize_image = resize_image[nonrotation_aug_lower:nonrotation_aug_upper, nonrotation_aug_lower:nonrotation_aug_upper]
             if use_height_map:
                 height_map = generate_height_map(400)
             else:
@@ -267,12 +269,12 @@ class data_visualization:
         fig.show()
 
 
+if __name__ == "__main__":
+    molecular_imprinting_name = 'MP'
+    data_miner = data_mining()
+    data_visual = data_visualization()
 
-molecular_imprinting_name = 'MP'
-data_miner = data_mining()
-data_visual = data_visualization()
-
-x, y = image_preprocessing()
-df = data_miner.method_1(x, y)
-data_visual.method_1(df, molecular_imprinting_name)
+    x, y = image_preprocessing()
+    df = data_miner.method_1(x, y)
+    data_visual.method_1(df, molecular_imprinting_name)
 

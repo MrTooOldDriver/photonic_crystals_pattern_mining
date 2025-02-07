@@ -33,20 +33,22 @@ def image_preprocessing(img_path: str = './output/rgb', output_path: str = './ou
                         rotation_aug = False, experiment_with_gray_scale = True, 
                         use_entire_dataset = True, enhance = True, crop = False, 
                         load_all_images = False, distraction_merge = False, 
-                        distraction_merge_to_one = False, original_merge_to_one = False, pixels_per_cell = (100, 100), 
-                        molecular_imprinting_name = 'DMMP', random_keypoints_upper: int = 2500, offset: int = 315):
+                        distraction_merge_to_one = False, original_merge_to_one = False, 
+                        pixels_per_cell = (100, 100), orientations = 9, cells_per_block = (1, 1), 
+                        ksize = (5,5), crop_size = 350, molecular_imprinting_name = 'DMMP', 
+                        random_keypoints_upper: int = 2500, offset: int = 315):
     # get all files ending with .jpg
     data_dir = pathlib.Path(img_path)
     image_count = len(list(data_dir.glob('*.jpg')))
     logging.debug(f"image count = {image_count}")
 
-    def hog_feature_vector(src, pixels_per_cell):
-        fd = hog(src, orientations=9, pixels_per_cell=pixels_per_cell, cells_per_block=(1, 1), channel_axis=2)
+    def hog_feature_vector(src, pixels_per_cell, orientations, cells_per_block):
+        fd = hog(src, orientations = orientations, pixels_per_cell = pixels_per_cell, cells_per_block = cells_per_block, channel_axis=2)
         # fd = hog(src, orientations=9, pixels_per_cell=(8, 8), cells_per_block=(3, 3), channel_axis=2)
         return fd
 
-    def image_enhance(src):
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
+    def image_enhance(src, ksize):
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, ksize)
         # Top Hat Transform
         topHat = cv2.morphologyEx(src, cv2.MORPH_TOPHAT, kernel)
         # Black Hat Transform
@@ -74,9 +76,8 @@ def image_preprocessing(img_path: str = './output/rgb', output_path: str = './ou
 
         if crop:
             height, width = src.shape[:2]
-            size = 350
             center = [int(width / 2), int(height / 2)]
-            resize_image = src[center[0]-size:center[0]+size, center[1]-size:center[1]+size]
+            resize_image = src[center[0]-crop_size:center[0]+crop_size, center[1]-crop_size:center[1]+crop_size]
 
         if rotation_aug:
             for i in range(3):
@@ -84,14 +85,14 @@ def image_preprocessing(img_path: str = './output/rgb', output_path: str = './ou
                 rotated_image = cv2.warpAffine(src=src, M=rotate_matrix, dsize=(width, height))
                 resize_image = cv2.resize(src=src, dsize=(int(width / 2), int(height / 2)))
                 if enhance:
-                    resize_image = image_enhance(resize_image)
-                feature_vector = hog_feature_vector(resize_image, pixels_per_cell)
+                    resize_image = image_enhance(resize_image, ksize)
+                feature_vector = hog_feature_vector(resize_image, pixels_per_cell, orientations, cells_per_block)
                 x.append(feature_vector)
                 y.append(path.name.split('-')[2].replace(' ', ''))
         else:
             if enhance:
-                src = image_enhance(src)
-            feature_vector = hog_feature_vector(src, pixels_per_cell)
+                src = image_enhance(src, ksize)
+            feature_vector = hog_feature_vector(src, pixels_per_cell, orientations, cells_per_block)
             x.append(feature_vector)
             if load_all_images:
                 label_name = path.name.split('-')[1].split('(')[0] + '-' + path.name.split('-')[2].replace(' ', '')
@@ -126,7 +127,7 @@ def image_preprocessing(img_path: str = './output/rgb', output_path: str = './ou
 
 
 class data_mining:
-    def method_1(self, experiment_with_gray_scale = True, enhance = True,  pixels_per_cell = (100, 100), image_dir = 'output/rgb/M-MPA-KF6P-10-6M-1.jpg'):
+    def method_1(self, experiment_with_gray_scale = True, enhance = True, crop_size = 350, pixels_per_cell = (100, 100), image_dir = 'output/rgb/M-MPA-KF6P-10-6M-1.jpg'):
         img = cv2.imread(image_dir)
         if experiment_with_gray_scale:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -143,9 +144,8 @@ class data_mining:
             img = img + topHat - blackHat
 
         height, width = img.shape[:2]
-        size = 350
         center = [int(width / 2), int(height / 2)]
-        resize_image = img[center[0]-size:center[0]+size, center[1]-size:center[1]+size]
+        resize_image = img[center[0]-crop_size:center[0]+crop_size, center[1]-crop_size:center[1]+crop_size]
 
         fd, hog_image = hog(resize_image, orientations=9, pixels_per_cell=pixels_per_cell, cells_per_block=(1, 1), visualize=True, channel_axis=2)
         return resize_image, hog_image
@@ -215,20 +215,20 @@ class data_visualization:
 
 
 
+if __name__ == "__main__":
+    molecular_imprinting_name = 'DMMP'
+    data_miner = data_mining()
+    data_visual = data_visualization()
 
-molecular_imprinting_name = 'DMMP'
-data_miner = data_mining()
-data_visual = data_visualization()
-
-x, y = image_preprocessing()
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.3, stratify=y)
-logging.debug(x_train.shape)
-logging.debug(y_train)
-logging.debug(y_test)
-resize_image, hog_image = data_miner.method_1()
-data_visual.method_1(x, y, resize_image, hog_image)
-df = data_miner.method_2(x, y, x_train, y_train)
-data_visual.method_2(df, molecular_imprinting_name)
+    x, y = image_preprocessing()
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.3, stratify=y)
+    logging.debug(x_train.shape)
+    logging.debug(y_train)
+    logging.debug(y_test)
+    resize_image, hog_image = data_miner.method_1()
+    data_visual.method_1(x, y, resize_image, hog_image)
+    df = data_miner.method_2(x, y, x_train, y_train)
+    data_visual.method_2(df, molecular_imprinting_name)
 
 
 # TODO check if this code is useful

@@ -24,9 +24,6 @@ def configure_logging(debug_mode=False):
         stream=sys.stdout
     )
 
-logger = logging.getLogger(__name__)
-debug_mode = True
-configure_logging(debug_mode)
 
 
 def image_preprocessing(img_path = './output/rgb', output_path: str = './output/sift', 
@@ -344,16 +341,18 @@ class data_visualization:
 
 
 
+if __name__ == "__main__":
+    logger = logging.getLogger(__name__)
+    configure_logging(DEBUG)
+    molecular_imprinting_name = 'MPA'
+    data_miner = data_mining()
+    data_visual = data_visualization()
 
-molecular_imprinting_name = 'MPA'
-data_miner = data_mining()
-data_visual = data_visualization()
+    x, y = image_preprocessing()
+    color_discrete_map, all_angles_classes, all_radii_classes = data_miner.method_1(x, y)
+    data_visual.method_1(x, y)
+    data_visual.method_2(all_angles_classes, color_discrete_map, molecular_imprinting_name)
+    data_visual.method_3(all_radii_classes, color_discrete_map, molecular_imprinting_name)
 
-x, y = image_preprocessing()
-color_discrete_map, all_angles_classes, all_radii_classes = data_miner.method_1(x, y)
-data_visual.method_1(x, y)
-data_visual.method_2(all_angles_classes, color_discrete_map, molecular_imprinting_name)
-data_visual.method_3(all_radii_classes, color_discrete_map, molecular_imprinting_name)
-
-data_visual.method_4(all_angles_classes, color_discrete_map, molecular_imprinting_name)
-data_visual.method_5(all_radii_classes, color_discrete_map, molecular_imprinting_name)
+    data_visual.method_4(all_angles_classes, color_discrete_map, molecular_imprinting_name)
+    data_visual.method_5(all_radii_classes, color_discrete_map, molecular_imprinting_name)
