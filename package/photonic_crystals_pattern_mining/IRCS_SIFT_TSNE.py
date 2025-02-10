@@ -14,19 +14,6 @@ from skimage.color import rgb2gray, gray2rgb
 from sklearn.manifold import TSNE
 
 
-DEBUG = False
-
-
-def configure_logging(debug_mode=False):
-    log_level = logging.DEBUG if debug_mode else logging.INFO
-    logging.basicConfig(
-        level=log_level,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        stream=sys.stdout
-    )
-
-logger = logging.getLogger(__name__)
-configure_logging(DEBUG)
 
 
 
@@ -270,6 +257,18 @@ class data_visualization:
 
 
 if __name__ == "__main__":
+    DEBUG = False
+    def configure_logging(debug_mode=False):
+        log_level = logging.DEBUG if debug_mode else logging.INFO
+        logging.basicConfig(
+            level=log_level,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            stream=sys.stdout
+        )
+
+    logger = logging.getLogger(__name__)
+    configure_logging(DEBUG)
+
     molecular_imprinting_name = 'MP'
     data_miner = data_mining()
     data_visual = data_visualization()

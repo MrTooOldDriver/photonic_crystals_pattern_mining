@@ -13,20 +13,6 @@ from skimage.feature import SIFT
 from skimage import exposure
 from skimage.color import rgb2gray, gray2rgb
 
-DEBUG = False
-
-
-def configure_logging(debug_mode=False):
-    log_level = logging.DEBUG if debug_mode else logging.INFO
-    logging.basicConfig(
-        level=log_level,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        stream=sys.stdout
-    )
-
-logger = logging.getLogger(__name__)
-debug_mode = True
-configure_logging(debug_mode)
 
 
 
@@ -583,6 +569,18 @@ class data_visualization:
 
 
 if __name__ == "__main__":
+    DEBUG = False
+    def configure_logging(debug_mode=False):
+        log_level = logging.DEBUG if debug_mode else logging.INFO
+        logging.basicConfig(
+            level=log_level,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            stream=sys.stdout
+        )
+    logger = logging.getLogger(__name__)
+    debug_mode = True
+    configure_logging(debug_mode)
+
     molecular_imprinting_name = 'MPA'
     data_miner = data_mining()
     data_visual = data_visualization()
