@@ -10,9 +10,11 @@ import sys
 import numpy as np
 from matplotlib import pyplot as plt
 
-SUB_TRACK_OUTSIDE = True
 
-def image_preprocessing(path_dir = './dataset'):
+def image_preprocessing(path_dir = './dataset', SUB_TRACK_OUTSIDE = True, g_blur_ksize = (5, 5), g_blur_sigmaX = 0, 
+                        find_circle_canny_lower_threshold = 5, find_circle_canny_upper_threshold = 15, second_zoom_in_factor = 40, 
+                        find_circle_no_circle_canny_lower = 20, find_circle_no_circle_canny_upper = 25, 
+                        find_radius_canny_lower_threshold = 5, find_radius_canny_upper_threshold = 15):
 
     def find_circle_threshold_ver(image_path, TARGET_IMAGE_SIZE):
         # preprocess
@@ -36,8 +38,8 @@ def image_preprocessing(path_dir = './dataset'):
         print('circle diameter:', circle_diameter)
 
         gray = cv2.cvtColor(img_with_bg_fill, cv2.COLOR_BGR2GRAY)
-        gaussian_blur = cv2.GaussianBlur(gray, (5, 5), 0)
-        canny = cv2.Canny(gaussian_blur, 5, 15)
+        gaussian_blur = cv2.GaussianBlur(gray, g_blur_ksize, g_blur_sigmaX)
+        canny = cv2.Canny(gaussian_blur, find_circle_canny_lower_threshold, find_circle_canny_upper_threshold)
         canny = cv2.bitwise_and(canny, canny, mask=circle_mask)
 
         # use bounding box to crop the image
@@ -52,7 +54,7 @@ def image_preprocessing(path_dir = './dataset'):
         cropped_no_bg_fill = img_with_bg_fill[y - offset:y + circle_diameter + offset, x - offset:x + circle_diameter + offset]
         if SUB_TRACK_OUTSIDE:
             # future zoom in for rgb_zoom output
-            offset = offset - 40
+            offset = offset - second_zoom_in_factor
         cropped_img_future = src[y - offset:y + circle_diameter + offset, x - offset:x + circle_diameter + offset]
 
         # resize the image
@@ -74,7 +76,7 @@ def image_preprocessing(path_dir = './dataset'):
         no_bg_bin_fig = get_histogram_bin(no_background_img)
 
         no_circle_detection_original_img = src.copy()
-        no_circle_detection_original_canny_img = cv2.Canny(no_circle_detection_original_img, 20, 25)
+        no_circle_detection_original_canny_img = cv2.Canny(no_circle_detection_original_img, find_circle_no_circle_canny_lower, find_circle_no_circle_canny_upper)
 
         return resized_img, resized_canny, fig, resized_no_bg, no_bg_fig, no_bg_bin_fig, resized_no_bg_fill, no_circle_detection_original_img, \
             no_circle_detection_original_canny_img, no_bg_fix_circle_mask, no_bg_fix_circle_mask_canny, resized_cropped_img_future
@@ -90,9 +92,9 @@ def image_preprocessing(path_dir = './dataset'):
         # preprocess
         hh, ww = img.shape[:2]
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        gaussian_blur = cv2.GaussianBlur(gray, (5, 5), 0)
-        canny = cv2.Canny(gaussian_blur, 5, 15)
-        blur = cv2.blur(canny, (40, 40))
+        gaussian_blur = cv2.GaussianBlur(gray, (5, 5), 0) # TODO
+        canny = cv2.Canny(gaussian_blur, find_radius_canny_lower_threshold, find_radius_canny_upper_threshold) # TODO
+        blur = cv2.blur(canny, (40, 40)) # TODO
 
         # get the (largest) contour
         contours = cv2.findContours(blur, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -191,59 +193,59 @@ def image_preprocessing(path_dir = './dataset'):
             ax.set_xlim([0, HIST_BINS-1])
         return ax
 
+    if __name__ == "__main__":
 
+        print('cv_locator start')
+        TARGET_IMAGE_SIZE = (1000, 1000)
+        data_dir = pathlib.Path(path_dir)
+        image_count = len(list(data_dir.glob('*/*.jpg')))
+        print(str(image_count) + 'images found')
+        for path in data_dir.glob('*/*.jpg'):
+            print('processing ' + str(path))
+            img = cv2.imread(str(path))
+            image_name = path.name
+            # if image_name == 'M-DMMP-DMMP-10-3M-1.jpg':
+            #     print('Bad Image Detected, wont process')
+            #     continue
+            if img.shape[0] < 500:
+                continue
+            resized_img, bounding_rect, ax, no_background_img, no_bg_ax, no_bg_bin_ax, img_with_bg_fill, \
+            no_circle_detection_original_img, no_circle_detection_original_canny_img, no_bg_fix_circle_mask, \
+            no_bg_fix_circle_mask_canny, resized_cropped_img_future = find_circle_threshold_ver(str(path), TARGET_IMAGE_SIZE)
+            # try:
+            #     resized_img, bounding_rect, ax, no_background_img, no_bg_ax, no_bg_bin_ax, img_with_bg_fill, \
+            #     no_circle_detection_original_img, no_circle_detection_original_canny_img = find_circle_threshold_ver(str(path), TARGET_IMAGE_SIZE)
+            # except Exception as e:
+            #     print(e)
+            #     print('error found when processing ' + str(path))
+            #     cv2.imshow('img', img)
+            #     cv2.waitKey()
+            #     cv2.destroyAllWindows()
+            #     continue
+            cv2.imwrite('./output/rgb/{0}'.format(image_name), resized_img)
+            cv2.imwrite('./output/rgb_no_circle_det/{0}'.format(image_name), no_circle_detection_original_img)
+            cv2.imwrite('./output/canny/{0}'.format(image_name), bounding_rect)
+            cv2.imwrite('./output/canny_no_circle_det/{0}'.format(image_name), no_circle_detection_original_canny_img)
+            cv2.imwrite('./output/no_bg/{0}'.format(image_name), no_background_img)
+            cv2.imwrite('./output/no_bg_fill/{0}'.format(image_name), img_with_bg_fill)
+            cv2.imwrite('./output/no_bg_fix_circle_mask/{0}'.format(image_name), no_bg_fix_circle_mask)
+            cv2.imwrite('./output/no_bg_fix_circle_mask_canny/{0}'.format(image_name), no_bg_fix_circle_mask_canny)
+            cv2.imwrite('./output/rgb_zoom/{0}'.format(image_name),resized_cropped_img_future)
+            ax.figure.savefig('./output/hist/{0}'.format(image_name))
+            no_bg_ax.figure.savefig('./output/no_bg_hist/{0}'.format(image_name))
+            no_bg_bin_ax.figure.savefig('./output/no_bg_bin_hist/{0}'.format(image_name))
 
-    print('cv_locator start')
-    TARGET_IMAGE_SIZE = (1000, 1000)
-    data_dir = pathlib.Path(path_dir)
-    image_count = len(list(data_dir.glob('*/*.jpg')))
-    print(str(image_count) + 'images found')
-    for path in data_dir.glob('*/*.jpg'):
-        print('processing ' + str(path))
-        img = cv2.imread(str(path))
-        image_name = path.name
-        # if image_name == 'M-DMMP-DMMP-10-3M-1.jpg':
-        #     print('Bad Image Detected, wont process')
-        #     continue
-        if img.shape[0] < 500:
-            continue
-        resized_img, bounding_rect, ax, no_background_img, no_bg_ax, no_bg_bin_ax, img_with_bg_fill, \
-        no_circle_detection_original_img, no_circle_detection_original_canny_img, no_bg_fix_circle_mask, \
-        no_bg_fix_circle_mask_canny, resized_cropped_img_future = find_circle_threshold_ver(str(path), TARGET_IMAGE_SIZE)
-        # try:
-        #     resized_img, bounding_rect, ax, no_background_img, no_bg_ax, no_bg_bin_ax, img_with_bg_fill, \
-        #     no_circle_detection_original_img, no_circle_detection_original_canny_img = find_circle_threshold_ver(str(path), TARGET_IMAGE_SIZE)
-        # except Exception as e:
-        #     print(e)
-        #     print('error found when processing ' + str(path))
-        #     cv2.imshow('img', img)
-        #     cv2.waitKey()
-        #     cv2.destroyAllWindows()
-        #     continue
-        cv2.imwrite('./output/rgb/{0}'.format(image_name), resized_img)
-        cv2.imwrite('./output/rgb_no_circle_det/{0}'.format(image_name), no_circle_detection_original_img)
-        cv2.imwrite('./output/canny/{0}'.format(image_name), bounding_rect)
-        cv2.imwrite('./output/canny_no_circle_det/{0}'.format(image_name), no_circle_detection_original_canny_img)
-        cv2.imwrite('./output/no_bg/{0}'.format(image_name), no_background_img)
-        cv2.imwrite('./output/no_bg_fill/{0}'.format(image_name), img_with_bg_fill)
-        cv2.imwrite('./output/no_bg_fix_circle_mask/{0}'.format(image_name), no_bg_fix_circle_mask)
-        cv2.imwrite('./output/no_bg_fix_circle_mask_canny/{0}'.format(image_name), no_bg_fix_circle_mask_canny)
-        cv2.imwrite('./output/rgb_zoom/{0}'.format(image_name),resized_cropped_img_future)
-        ax.figure.savefig('./output/hist/{0}'.format(image_name))
-        no_bg_ax.figure.savefig('./output/no_bg_hist/{0}'.format(image_name))
-        no_bg_bin_ax.figure.savefig('./output/no_bg_bin_hist/{0}'.format(image_name))
+        # path_dict = './P6-DeviceExamples-MAP-20211216'
+        # images_list = [f for f in listdir(path_dict) if isfile(join(path_dict, f))]
+        # result = []
+        # for images_name in images_list:
+        #     if images_name.startswith('.'):
+        #         continue
+        #     image = find_circle_threshold_ver(path_dict + '/{0}'.format(images_name))
+        #     # cv2.imwrite('./P6-DeviceExamples-MAP-20211216/output/{0}'.format(images_name), image)
+        #     cv2.imwrite('./P6-DeviceExamples-MAP-20211229/output/{0}'.format(images_name), image)
 
-    # path_dict = './P6-DeviceExamples-MAP-20211216'
-    # images_list = [f for f in listdir(path_dict) if isfile(join(path_dict, f))]
-    # result = []
-    # for images_name in images_list:
-    #     if images_name.startswith('.'):
-    #         continue
-    #     image = find_circle_threshold_ver(path_dict + '/{0}'.format(images_name))
-    #     # cv2.imwrite('./P6-DeviceExamples-MAP-20211216/output/{0}'.format(images_name), image)
-    #     cv2.imwrite('./P6-DeviceExamples-MAP-20211229/output/{0}'.format(images_name), image)
-
-    # test
-    # test_image_path = './dataset\M-DMMP-KF6P-10-6M\M-DMMP-KF6P-10-6M-1.jpg'
-    # test_image_path = './dataset\M-DMMP-KF6P-10-6M\M-DMMP-KF6P-10-6M-2.jpg'
-    # find_circle_threshold_ver(test_image_path, (1000, 1000))
+        # test
+        # test_image_path = './dataset\M-DMMP-KF6P-10-6M\M-DMMP-KF6P-10-6M-1.jpg'
+        # test_image_path = './dataset\M-DMMP-KF6P-10-6M\M-DMMP-KF6P-10-6M-2.jpg'
+        # find_circle_threshold_ver(test_image_path, (1000, 1000))
