@@ -1,10 +1,6 @@
 import math
-from os import listdir
-from os.path import join, isfile
 import pathlib
 import cv2
-import logging
-import sys
 
 # 用于检测晶球位置和做对应剪裁
 import numpy as np
