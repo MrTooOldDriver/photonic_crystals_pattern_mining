@@ -1,16 +1,16 @@
-import pathlib
-import cv2
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import plotly.io as pio
-import plotly.express as px
-import logging
-import sys
-from skimage.feature import hog
-from sklearn.manifold import TSNE
-from skimage import exposure
-from sklearn.model_selection import train_test_split
+# import pathlib
+# import cv2
+# import numpy as np
+# import matplotlib.pyplot as plt
+# import pandas as pd
+# import plotly.io as pio
+# import plotly.express as px
+# import logging
+# import sys
+# from skimage.feature import hog
+# from sklearn.manifold import TSNE
+# from skimage import exposure
+# from sklearn.model_selection import train_test_split
 
 
 
@@ -23,6 +23,11 @@ def image_preprocessing(img_path: str = './output/rgb', output_path: str = './ou
                         pixels_per_cell = (100, 100), orientations = 9, cells_per_block = (1, 1), 
                         ksize = (5,5), crop_size = 350, molecular_imprinting_name = 'DMMP', 
                         random_keypoints_upper: int = 2500, offset: int = 315):
+    import pathlib
+    import cv2
+    import numpy as np
+    import logging
+    from skimage.feature import hog
     # get all files ending with .jpg
     data_dir = pathlib.Path(img_path)
     image_count = len(list(data_dir.glob('*.jpg')))
@@ -114,6 +119,8 @@ def image_preprocessing(img_path: str = './output/rgb', output_path: str = './ou
 
 class data_mining:
     def method_1(self, experiment_with_gray_scale = True, enhance = True, crop_size = 350, pixels_per_cell = (100, 100), image_dir = 'output/rgb/M-MPA-KF6P-10-6M-1.jpg'):
+        import cv2
+        from skimage.feature import hog
         img = cv2.imread(image_dir)
         if experiment_with_gray_scale:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -138,6 +145,9 @@ class data_mining:
     
 
     def method_2(self, x, y, x_train, y_train, use_entire_dataset = True, perplexity = 3):
+        import pandas as pd
+        import logging
+        from sklearn.manifold import TSNE
         pca = TSNE(n_components=3, learning_rate='auto', init='pca', perplexity=perplexity)
         if use_entire_dataset:
             x_train_pca = pca.fit_transform(x)
@@ -160,11 +170,14 @@ class data_mining:
 
 class data_visualization:
     def __init__(self):
+        import plotly.io as pio
         print(pio.templates)
         pio.templates.default = 'plotly'
 
 
     def method_1(self, x, y, resize_image, hog_image):
+        import matplotlib.pyplot as plt
+        from skimage import exposure
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(30, 15))
 
         ax1.axis('off')
@@ -181,6 +194,7 @@ class data_visualization:
 
 
     def method_2(self, df, molecular_imprinting_name, perplexity = 3, pixels_per_cell = (100, 100)):
+        import plotly.express as px
         fig = px.scatter_3d(df, x='PC1', y='PC2',z='PC3',  color='label', symbol='label', title='Hog TSNE %s Granularity=%s Sperplexity=%s' % (molecular_imprinting_name, str((int(1000 / pixels_per_cell[0]), int(1000 / pixels_per_cell[0]))), str(perplexity)), color_discrete_map={
                         "DMMP": "red",
                         "NaBF4": "green",
@@ -201,32 +215,32 @@ class data_visualization:
 
 
 
-if __name__ == "__main__":
-    DEBUG = False
-    def configure_logging(debug_mode=False):
-        log_level = logging.DEBUG if debug_mode else logging.INFO
-        logging.basicConfig(
-            level=log_level,
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-            stream=sys.stdout
-        )
-    logger = logging.getLogger(__name__)
-    debug_mode = True
-    configure_logging(debug_mode)
+# if __name__ == "__main__":
+#     DEBUG = False
+#     def configure_logging(debug_mode=False):
+#         log_level = logging.DEBUG if debug_mode else logging.INFO
+#         logging.basicConfig(
+#             level=log_level,
+#             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+#             stream=sys.stdout
+#         )
+#     logger = logging.getLogger(__name__)
+#     debug_mode = True
+#     configure_logging(debug_mode)
     
-    molecular_imprinting_name = 'DMMP'
-    data_miner = data_mining()
-    data_visual = data_visualization()
+#     molecular_imprinting_name = 'DMMP'
+#     data_miner = data_mining()
+#     data_visual = data_visualization()
 
-    x, y = image_preprocessing()
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.3, stratify=y)
-    logging.debug(x_train.shape)
-    logging.debug(y_train)
-    logging.debug(y_test)
-    resize_image, hog_image = data_miner.method_1()
-    data_visual.method_1(x, y, resize_image, hog_image)
-    df = data_miner.method_2(x, y, x_train, y_train)
-    data_visual.method_2(df, molecular_imprinting_name)
+#     x, y = image_preprocessing()
+#     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.3, stratify=y)
+#     logging.debug(x_train.shape)
+#     logging.debug(y_train)
+#     logging.debug(y_test)
+#     resize_image, hog_image = data_miner.method_1()
+#     data_visual.method_1(x, y, resize_image, hog_image)
+#     df = data_miner.method_2(x, y, x_train, y_train)
+#     data_visual.method_2(df, molecular_imprinting_name)
 
 
 # TODO check if this code is useful

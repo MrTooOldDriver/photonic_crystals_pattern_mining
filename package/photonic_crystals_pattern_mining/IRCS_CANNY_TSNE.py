@@ -1,17 +1,17 @@
-import pathlib
-import cv2
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import plotly.express as px
-import plotly.io as pio
-import logging
-import sys
-from sklearn.manifold import TSNE
-from sklearn.preprocessing import StandardScaler
+# import pathlib
+# import cv2
+# import numpy as np
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# import plotly.express as px
+# import plotly.io as pio
+# import logging
+# import sys
+# from sklearn.manifold import TSNE
+# from sklearn.preprocessing import StandardScaler
 
 
-
+__all__ = ["image_preprocessing", "data_mining", "data_visualization"]
 
 
 
@@ -19,7 +19,12 @@ def image_preprocessing(img_path: str = './output/no_bg_fix_circle_mask_canny', 
                         load_all_images = False, resize_factor = 50, distraction_merge = False, 
                         distraction_merge_to_one = False, original_merge_to_one = False, 
                         molecular_imprinting_name = 'DMMP'):
-    
+    import pathlib
+    import cv2
+    import numpy as np
+    import logging
+
+
     data_dir = pathlib.Path(img_path)
     image_count = len(list(data_dir.glob('*.jpg')))
     logging.debug(image_count)
@@ -87,6 +92,10 @@ def image_preprocessing(img_path: str = './output/no_bg_fix_circle_mask_canny', 
 
 class data_mining:
     def method_1(self, x, y):
+        import pandas as pd
+        import logging
+        from sklearn.manifold import TSNE
+        from sklearn.preprocessing import StandardScaler
         scaler = StandardScaler()
         x = scaler.fit_transform(x)
         use_entire_dataset = True
@@ -116,11 +125,13 @@ class data_mining:
 
 class data_visualization:
     def __init__(self):
+        import plotly.io as pio
         print(pio.templates)
         pio.templates.default = 'plotly'
 
 
     def method_1(self, df, molecular_imprinting_name, resize_x, perplexity = 5):
+        import plotly.express as px
         fig = px.scatter_3d(df, x='PC1', y='PC2',z='PC3',  color='label', symbol='label', title='Canny TSNE %s Granularity=%s Sperplexity=%s' % (molecular_imprinting_name, str(resize_x[0].shape), str(perplexity)), color_discrete_map={
                         "DMMP": "red",
                         "NaBF4": "green",
@@ -147,23 +158,23 @@ class data_visualization:
 
 
 
-if __name__ == "__main__":
-    DEBUG = False
-    def configure_logging(debug_mode=False):
-        log_level = logging.DEBUG if debug_mode else logging.INFO
-        logging.basicConfig(
-            level=log_level,
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-            stream=sys.stdout
-        )
-    logger = logging.getLogger(__name__)
-    debug_mode = True
-    configure_logging(debug_mode)
+# if __name__ == "__main__":
+#     DEBUG = False
+#     def configure_logging(debug_mode=False):
+#         log_level = logging.DEBUG if debug_mode else logging.INFO
+#         logging.basicConfig(
+#             level=log_level,
+#             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+#             stream=sys.stdout
+#         )
+#     logger = logging.getLogger(__name__)
+#     debug_mode = True
+#     configure_logging(debug_mode)
     
-    molecular_imprinting_name = 'DMMP'
-    data_miner = data_mining()
-    data_visual = data_visualization()
+#     molecular_imprinting_name = 'DMMP'
+#     data_miner = data_mining()
+#     data_visual = data_visualization()
 
-    x, y, resize_x = image_preprocessing()
-    df = data_miner.method_1(x, y)
-    data_visual.method_1(df, molecular_imprinting_name, resize_x)
+#     x, y, resize_x = image_preprocessing()
+#     df = data_miner.method_1(x, y)
+#     data_visual.method_1(df, molecular_imprinting_name, resize_x)

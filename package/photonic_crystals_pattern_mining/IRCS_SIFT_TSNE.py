@@ -1,17 +1,17 @@
-import pathlib
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import plotly.express as px
-import plotly.io as pio
-import cv2
-import os
-import logging
-import sys
-from skimage.feature import SIFT
-from skimage import exposure
-from skimage.color import rgb2gray, gray2rgb
-from sklearn.manifold import TSNE
+# import pathlib
+# import numpy as np
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# import plotly.express as px
+# import plotly.io as pio
+# import cv2
+# import os
+# import logging
+# import sys
+# from skimage.feature import SIFT
+# from skimage import exposure
+# from skimage.color import rgb2gray, gray2rgb
+# from sklearn.manifold import TSNE
 
 
 
@@ -25,6 +25,15 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
                         rotation_aug_lower = 150, rotation_aug_upper = 350,
                         nonrotation_aug_lower = 50, nonrotation_aug_upper = 450,
                         molecular_imprinting_name = 'MP'):
+    import pathlib
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import cv2
+    import os
+    import logging
+    from skimage.feature import SIFT
+    from skimage import exposure
+    from skimage.color import rgb2gray
 
     data_dir = pathlib.Path(img_path)
     image_count = len(list(data_dir.glob('*.jpg')))
@@ -182,6 +191,9 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
 
 class data_mining: 
     def method_1(self, x, y, use_entire_dataset = True):
+        import pandas as pd
+        import logging
+        from sklearn.manifold import TSNE
         # TODO check we need to keep these codes
         # from sklearn.preprocessing import StandardScaler
         # sc = StandardScaler()
@@ -235,11 +247,14 @@ class data_mining:
 
 class data_visualization:
     def __init__(self):
+        import plotly.io as pio
+        import logging
         logging.debug(pio.templates)
         pio.templates.default = 'plotly'
 
 
     def method_1(self, df, molecular_imprinting_name):
+        import plotly.express as px
         fig = px.scatter_3d(df, x='PC1', y='PC2', z='PC3', color='label', symbol='label', title='%s SIFT' % (molecular_imprinting_name), color_discrete_map={
                         "DMMP": "red",
                         "NaBF4": "green",
@@ -256,24 +271,24 @@ class data_visualization:
         fig.show()
 
 
-if __name__ == "__main__":
-    DEBUG = False
-    def configure_logging(debug_mode=False):
-        log_level = logging.DEBUG if debug_mode else logging.INFO
-        logging.basicConfig(
-            level=log_level,
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-            stream=sys.stdout
-        )
+# if __name__ == "__main__":
+#     DEBUG = False
+#     def configure_logging(debug_mode=False):
+#         log_level = logging.DEBUG if debug_mode else logging.INFO
+#         logging.basicConfig(
+#             level=log_level,
+#             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+#             stream=sys.stdout
+#         )
 
-    logger = logging.getLogger(__name__)
-    configure_logging(DEBUG)
+#     logger = logging.getLogger(__name__)
+#     configure_logging(DEBUG)
 
-    molecular_imprinting_name = 'MP'
-    data_miner = data_mining()
-    data_visual = data_visualization()
+#     molecular_imprinting_name = 'MP'
+#     data_miner = data_mining()
+#     data_visual = data_visualization()
 
-    x, y = image_preprocessing()
-    df = data_miner.method_1(x, y)
-    data_visual.method_1(df, molecular_imprinting_name)
+#     x, y = image_preprocessing()
+#     df = data_miner.method_1(x, y)
+#     data_visual.method_1(df, molecular_imprinting_name)
 

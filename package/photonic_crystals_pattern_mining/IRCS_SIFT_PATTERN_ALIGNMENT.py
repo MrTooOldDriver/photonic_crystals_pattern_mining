@@ -1,18 +1,18 @@
-import pathlib
-import cv2
-import numpy as np
-import matplotlib.pyplot as plt
-import os
-import logging
-import sys
-import plotly.io as pio
-import plotly.graph_objects as go
-import matplotlib.image as mpimg
-from skimage.feature import SIFT
-from skimage import exposure
-from skimage.color import rgb2gray
-from scipy.ndimage import gaussian_filter1d
-from scipy.fft import fft, fftfreq
+# import pathlib
+# import cv2
+# import numpy as np
+# import matplotlib.pyplot as plt
+# import os
+# import logging
+# import sys
+# import plotly.io as pio
+# import plotly.graph_objects as go
+# import matplotlib.image as mpimg
+# from skimage.feature import SIFT
+# from skimage import exposure
+# from skimage.color import rgb2gray
+# from scipy.ndimage import gaussian_filter1d
+# from scipy.fft import fft, fftfreq
 
 
 
@@ -31,7 +31,15 @@ def image_preprocessing(img_path: str = './output/rgb', output_path: str = './ou
     Returns: 
         x, y
     """
-
+    import pathlib
+    import cv2
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import os
+    import logging
+    from skimage.feature import SIFT
+    from skimage import exposure
+    from skimage.color import rgb2gray
     def sift_features_vector(src, image_path, height_map=None):
         src = rgb2gray(src)
         img_adapteq = exposure.equalize_adapthist(src, clip_limit=0.03)
@@ -271,6 +279,9 @@ def image_preprocessing(img_path: str = './output/rgb', output_path: str = './ou
 
 class data_mining:
     def method_1(self, x, y, color_discrete_map: map = None):
+        import numpy as np
+        import logging
+        import plotly.io as pio
         logging.debug(pio.templates)
         pio.templates.default = 'plotly'
 
@@ -334,6 +345,8 @@ class data_mining:
         return all_angles_classes, angle_bin, all_radii_classes, radii_bin, color_discrete_map
     
     def method_2(self, x, y, color_discrete_map: map = None):
+        import numpy as np
+        import logging
         # Assuming y is a list of strings corresponding to the labels of each point in x
         # Corrected color map in RGB format
         if (color_discrete_map == None):
@@ -386,6 +399,7 @@ class data_mining:
         
 
     def method_3(self, x, y, color_discrete_map: map = None):
+        import numpy as np
         # plot line graph for radii
 
         # Corrected color map in RGB format
@@ -422,6 +436,7 @@ class data_mining:
         return all_radii_classes, radii_bin, color_discrete_map
 
     def method_4(self, x, y, color_discrete_map = None):
+        import numpy as np
         # Assuming y is a list of strings corresponding to the labels of each point in x
         # Corrected color map in RGB format
         if (color_discrete_map == None):
@@ -477,6 +492,7 @@ class data_mining:
 
 class data_visualization:
     def method_1(self, all_angles_classes, angle_bin, all_radii_classes, radii_bin, color_discrete_map, molecular_imprinting_name):
+        import plotly.graph_objects as go
         # visualization
         # Plot the distribution of angles for each class
         fig = go.Figure()
@@ -495,6 +511,9 @@ class data_visualization:
         fig.show()
 
     def method_2(self, all_angles_classes, angle_bin, color_discrete_map, molecular_imprinting_name):
+        import numpy as np
+        import plotly.graph_objects as go
+        from scipy.ndimage import gaussian_filter1d
         # Plot the distribution of angles for each class as a smoothed line graph
         fig = go.Figure()
         for label, angles in all_angles_classes.items():
@@ -520,6 +539,9 @@ class data_visualization:
         fig.write_image("output_distribution/%s-line.png" % molecular_imprinting_name, height=500, width=500)
 
     def method_3(self, all_radii_classes, radii_bin, color_discrete_map, molecular_imprinting_name):
+        import numpy as np
+        import plotly.graph_objects as go
+        from scipy.ndimage import gaussian_filter1d
         # Plot the distribution of radii for each class as a smoothed line graph
         fig = go.Figure()
         for label, radii in all_radii_classes.items():
@@ -543,6 +565,10 @@ class data_visualization:
         fig.write_image("output_distribution/%s-radii-line.png" % molecular_imprinting_name, height=500, width=500)
 
     def method_4(self, all_angles_classes, angle_bin, color_discrete_map, molecular_imprinting_name):
+        import numpy as np
+        import plotly.graph_objects as go
+        from scipy.ndimage import gaussian_filter1d
+        from scipy.fft import fft, fftfreq
 
         # Apply Fourier Transform to the smoothed data and visualize the result
         fig_fft = go.Figure()
@@ -580,6 +606,8 @@ class data_visualization:
         fig_fft.write_image("output_distribution/%s-fourier.png" % molecular_imprinting_name, height=500, width=500)
 
     def method_5(self, img_dir: str = "./output_distribution", save_path: str = './output_distribution/merged_angle_image.png'):
+        import matplotlib.pyplot as plt
+        import matplotlib.image as mpimg
         # List of image names
         image_names = [
             'DMMP-line', 'MP-line',
@@ -606,6 +634,8 @@ class data_visualization:
         plt.show()
 
     def method_6(self, img_dir: str = "./output_distribution", save_path: str = './output_distribution/merged_radii_image.png'):
+        import matplotlib.pyplot as plt
+        import matplotlib.image as mpimg
         # List of image names
         image_names = [
             'DMMP-radii-line', 'MP-radii-line',
@@ -652,37 +682,37 @@ class data_visualization:
 
 
 # EXAMPLE USE CASE
-if __name__ == "__main__":
-    DEBUG = False
-    def configure_logging(debug_mode=False):
-        log_level = logging.DEBUG if debug_mode else logging.INFO
-        logging.basicConfig(
-            level=log_level,
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-            stream=sys.stdout
-        )
-    logger = logging.getLogger(__name__)
-    debug_mode = True
-    configure_logging(debug_mode)
+# if __name__ == "__main__":
+#     DEBUG = False
+#     def configure_logging(debug_mode=False):
+#         log_level = logging.DEBUG if debug_mode else logging.INFO
+#         logging.basicConfig(
+#             level=log_level,
+#             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+#             stream=sys.stdout
+#         )
+#     logger = logging.getLogger(__name__)
+#     debug_mode = True
+#     configure_logging(debug_mode)
 
-    molecular_imprinting_name = 'DMMP'
-    data_miner = data_mining()
-    data_visual = data_visualization()
+#     molecular_imprinting_name = 'DMMP'
+#     data_miner = data_mining()
+#     data_visual = data_visualization()
 
-    x, y = image_preprocessing()
+#     x, y = image_preprocessing()
 
-    all_angles_classes, angle_bin, all_radii_classes, radii_bin, color_discrete_map = data_miner.method_1(x, y)
-    data_visual.method_1(all_angles_classes, angle_bin, all_radii_classes, radii_bin, color_discrete_map, molecular_imprinting_name)
+#     all_angles_classes, angle_bin, all_radii_classes, radii_bin, color_discrete_map = data_miner.method_1(x, y)
+#     data_visual.method_1(all_angles_classes, angle_bin, all_radii_classes, radii_bin, color_discrete_map, molecular_imprinting_name)
 
-    all_angles_classes, angle_bin, color_discrete_map = data_miner.method_2(x, y)
-    data_visual.method_2(all_angles_classes, angle_bin, color_discrete_map, molecular_imprinting_name)
+#     all_angles_classes, angle_bin, color_discrete_map = data_miner.method_2(x, y)
+#     data_visual.method_2(all_angles_classes, angle_bin, color_discrete_map, molecular_imprinting_name)
 
-    all_radii_classes, radii_bin, color_discrete_map = data_miner.method_3(x, y)
-    data_visual.method_3(all_radii_classes, radii_bin, color_discrete_map, molecular_imprinting_name)
+#     all_radii_classes, radii_bin, color_discrete_map = data_miner.method_3(x, y)
+#     data_visual.method_3(all_radii_classes, radii_bin, color_discrete_map, molecular_imprinting_name)
 
-    all_radii_classes, radii_bin, color_discrete_map = data_miner.method_4(x, y)
-    data_visual.method_4(all_angles_classes, angle_bin, color_discrete_map, molecular_imprinting_name)
+#     all_radii_classes, radii_bin, color_discrete_map = data_miner.method_4(x, y)
+#     data_visual.method_4(all_angles_classes, angle_bin, color_discrete_map, molecular_imprinting_name)
 
-    data_visual.method_5()
+#     data_visual.method_5()
 
-    data_visual.method_6()
+#     data_visual.method_6()

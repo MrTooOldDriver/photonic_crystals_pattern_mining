@@ -1,15 +1,15 @@
-import pathlib
-import cv2
-import numpy as np
-import matplotlib.pyplot as plt
-import plotly.io as pio
-import plotly.graph_objects as go
-import os
-import logging
-import sys
-from skimage.feature import SIFT
-from skimage import exposure
-from skimage.color import rgb2gray, gray2rgb
+# import pathlib
+# import cv2
+# import numpy as np
+# import matplotlib.pyplot as plt
+# import plotly.io as pio
+# import plotly.graph_objects as go
+# import os
+# import logging
+# import sys
+# from skimage.feature import SIFT
+# from skimage import exposure
+# from skimage.color import rgb2gray
 
 
 
@@ -21,7 +21,15 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
                         load_all_images = False, use_height_map = True, distraction_merge = False, 
                         distraction_merge_to_one = False, original_merge_to_one = False, 
                         molecular_imprinting_name = 'MPA'):
-
+    import pathlib
+    import cv2
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import os
+    import logging
+    from skimage.feature import SIFT
+    from skimage import exposure
+    from skimage.color import rgb2gray
 
     data_dir = pathlib.Path(img_path)
     image_count = len(list(data_dir.glob('*.jpg')))
@@ -178,6 +186,7 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
 
 class data_mining: 
     def method_1(self, x, y, color_discrete_map = None):
+        import numpy as np
         # Assuming y is a list of strings corresponding to the labels of each point in x
         # Corrected color map in RGB format
         if (color_discrete_map == None):
@@ -227,11 +236,14 @@ class data_mining:
 
 class data_visualization:
     def __init__(self):
+        import plotly.io as pio
+        import logging
         logging.debug(pio.templates)
         pio.templates.default = 'plotly'
 
 
     def method_1(self, x, y, color_discrete_map = None):
+        import matplotlib.pyplot as plt
         # Assuming x and y are defined properly
         # x should be a list of arrays with shape (N, 2), where N is the number of keypoints
         # y should be a list of strings corresponding to the labels of each point in x
@@ -272,6 +284,7 @@ class data_visualization:
         plt.show()
 
     def method_2(self, all_angles_classes, color_discrete_map, molecular_imprinting_name, out_dir = "./output"):
+        import plotly.graph_objects as go
         # Plot the distribution of angles for each class
         fig = go.Figure()
         for label, angles in all_angles_classes.items():
@@ -282,6 +295,7 @@ class data_visualization:
         fig.write_html(f'{out_dir}/{molecular_imprinting_name}_angle_distribution.html')
 
     def method_3(self, all_radii_classes, color_discrete_map, molecular_imprinting_name, out_dir = "./output"):
+        import plotly.graph_objects as go
         # Plot the distribution of radii for each class
         fig = go.Figure()
         for label, radii in all_radii_classes.items():
@@ -292,6 +306,7 @@ class data_visualization:
         fig.write_html(f'{out_dir}/{molecular_imprinting_name}_raddii_distribution.html')
 
     def method_4(self, all_angles_classes, color_discrete_map, molecular_imprinting_name):
+        import plotly.graph_objects as go
         # Plot the distribution of angles for each class
         fig = go.Figure()
         for label, angles in all_angles_classes.items():
@@ -301,6 +316,7 @@ class data_visualization:
         fig.show()
 
     def method_5(self, all_radii_classes, color_discrete_map, molecular_imprinting_name):
+        import plotly.graph_objects as go
         # Plot the distribution of radii for each class
         fig = go.Figure()
         for label, radii in all_radii_classes.items():
@@ -331,27 +347,27 @@ class data_visualization:
 
 
 
-if __name__ == "__main__":
-    DEBUG = False
-    def configure_logging(debug_mode=False):
-        log_level = logging.DEBUG if debug_mode else logging.INFO
-        logging.basicConfig(
-            level=log_level,
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-            stream=sys.stdout
-        )
-    logger = logging.getLogger(__name__)
-    configure_logging(DEBUG)
+# if __name__ == "__main__":
+#     DEBUG = False
+#     def configure_logging(debug_mode=False):
+#         log_level = logging.DEBUG if debug_mode else logging.INFO
+#         logging.basicConfig(
+#             level=log_level,
+#             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+#             stream=sys.stdout
+#         )
+#     logger = logging.getLogger(__name__)
+#     configure_logging(DEBUG)
 
-    molecular_imprinting_name = 'MPA'
-    data_miner = data_mining()
-    data_visual = data_visualization()
+#     molecular_imprinting_name = 'MPA'
+#     data_miner = data_mining()
+#     data_visual = data_visualization()
 
-    x, y = image_preprocessing()
-    color_discrete_map, all_angles_classes, all_radii_classes = data_miner.method_1(x, y)
-    data_visual.method_1(x, y)
-    data_visual.method_2(all_angles_classes, color_discrete_map, molecular_imprinting_name)
-    data_visual.method_3(all_radii_classes, color_discrete_map, molecular_imprinting_name)
+#     x, y = image_preprocessing()
+#     color_discrete_map, all_angles_classes, all_radii_classes = data_miner.method_1(x, y)
+#     data_visual.method_1(x, y)
+#     data_visual.method_2(all_angles_classes, color_discrete_map, molecular_imprinting_name)
+#     data_visual.method_3(all_radii_classes, color_discrete_map, molecular_imprinting_name)
 
-    data_visual.method_4(all_angles_classes, color_discrete_map, molecular_imprinting_name)
-    data_visual.method_5(all_radii_classes, color_discrete_map, molecular_imprinting_name)
+#     data_visual.method_4(all_angles_classes, color_discrete_map, molecular_imprinting_name)
+#     data_visual.method_5(all_radii_classes, color_discrete_map, molecular_imprinting_name)

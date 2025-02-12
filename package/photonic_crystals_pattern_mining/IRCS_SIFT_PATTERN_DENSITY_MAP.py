@@ -1,17 +1,17 @@
-import pathlib
-import cv2
-import numpy as np
-import matplotlib.pyplot as plt
-import os
-import plotly.io as pio
-import plotly.graph_objects as go
-import matplotlib.image as mpimg
-import math
-import logging
-import sys
-from skimage.feature import SIFT
-from skimage import exposure
-from skimage.color import rgb2gray, gray2rgb
+# import pathlib
+# import cv2
+# import numpy as np
+# import matplotlib.pyplot as plt
+# import os
+# import plotly.io as pio
+# import plotly.graph_objects as go
+# import matplotlib.image as mpimg
+# import math
+# import logging
+# import sys
+# from skimage.feature import SIFT
+# from skimage import exposure
+# from skimage.color import rgb2gray, gray2rgb
 
 
 
@@ -23,6 +23,15 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
                         rotation_aug_lower = 150, rotation_aug_upper = 350,
                         nonrotation_aug_lower = 50, nonrotation_aug_upper = 450,
                         molecular_imprinting_name = 'MPA'):
+    import pathlib
+    import cv2
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import os
+    import logging
+    from skimage.feature import SIFT
+    from skimage import exposure
+    from skimage.color import rgb2gray
 
     data_dir = pathlib.Path(img_path)
     image_count = len(list(data_dir.glob('*.jpg')))
@@ -186,6 +195,7 @@ class data_mining:
         "MPA": [255, 165, 42],  # Goldenrod
         "MP": [128, 0, 128]  # Purple
     }, image_center = [200, 200], angle_bin = 20, radii_limit = 200):
+        import numpy as np
         # Assuming x and y are defined properly
         # x should be a list of arrays with shape (N, 2), where N is the number of keypoints
         # y should be a list of strings corresponding to the labels of each point in x
@@ -252,6 +262,7 @@ class data_mining:
     
     
     def method_2(self, x, bins = (10, 10), mesh_limit = 200):
+        import numpy as np
         # Extract keypoints from x array
         all_keypoints = np.vstack(x)
 
@@ -285,12 +296,15 @@ class data_mining:
 
 class data_visualization:
     def __init__(self):
+        import plotly.io as pio
+        import logging
         logging.debug(pio.templates)
         pio.templates.default = 'plotly'
 
 
     # Function to create a 3D histogram
     def create_3d_histogram(self, keypoints, bins=(10, 10)):
+        import numpy as np
         hist, edges = np.histogramdd(keypoints, bins=bins)
         total_sum = np.sum(hist)
         hist_normalized = hist / total_sum  # Normalize the histogram
@@ -317,6 +331,8 @@ class data_visualization:
         :param **kwargs: Passed to Mesh3d()
         :return: 3D barchart figure
         """
+        import plotly.graph_objects as go
+        import math
 
         if n_row < 1:
             n_row = math.ceil(math.sqrt(len(z_data)))
@@ -383,12 +399,15 @@ class data_visualization:
     
 
     def method_1(self, coordinates_list):
+        import matplotlib.pyplot as plt
         for coordinates, color_rgb in coordinates_list: # Scatter plot for keypoints
             plt.scatter(coordinates[:, 1], coordinates[:, 0], facecolors='none', edgecolors=color_rgb)
         plt.show()  # Display the plot
 
 
     def method_2(self, coordinates_color):
+        import numpy as np
+        import plotly.graph_objects as go
         fig = go.Figure()
 
         # Add each dataset's 3D density map to the figure
@@ -461,6 +480,7 @@ class data_visualization:
 
 
     def method_3(self, x_flat, y_flat, hist_flat):
+        import plotly.graph_objects as go
         # Plot the 3D density map using Plotly
         fig = go.Figure(data=[go.Scatter3d(
             x=x_flat,
@@ -489,6 +509,9 @@ class data_visualization:
 
 
     def method_4(self, coordinates_color, out_dir = "output_density"):
+        import numpy as np
+        import os
+        import plotly.graph_objects as go
         os.makedirs(f"./{out_dir}", exist_ok=True)
         for index in [0,1,2]:
             label, keypoints = list(coordinates_color.items())[index]
@@ -543,6 +566,8 @@ class data_visualization:
 
 
     def method_5(self, out_dir = "output_density"):
+        import matplotlib.pyplot as plt
+        import matplotlib.image as mpimg
         image_names = [
             'DMMP-DMMP', 'DMMP-NaBF4', 'DMMP-KF6P',
             'MP-MP', 'MP-NaBF4', 'MP-KF6P',
@@ -568,31 +593,31 @@ class data_visualization:
         plt.show()
 
 
-if __name__ == "__main__":
-    DEBUG = False
-    def configure_logging(debug_mode=False):
-        log_level = logging.DEBUG if debug_mode else logging.INFO
-        logging.basicConfig(
-            level=log_level,
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-            stream=sys.stdout
-        )
-    logger = logging.getLogger(__name__)
-    debug_mode = True
-    configure_logging(debug_mode)
+# if __name__ == "__main__":
+#     DEBUG = False
+#     def configure_logging(debug_mode=False):
+#         log_level = logging.DEBUG if debug_mode else logging.INFO
+#         logging.basicConfig(
+#             level=log_level,
+#             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+#             stream=sys.stdout
+#         )
+#     logger = logging.getLogger(__name__)
+#     debug_mode = True
+#     configure_logging(debug_mode)
 
-    molecular_imprinting_name = 'MPA'
-    data_miner = data_mining()
-    data_visual = data_visualization()
+#     molecular_imprinting_name = 'MPA'
+#     data_miner = data_mining()
+#     data_visual = data_visualization()
 
-    x, y = image_preprocessing()
-    coordinates_color, coordinates_list = data_miner.method_1(x, y)
-    data_visual.method_1(coordinates_list)
-    data_visual.method_2(coordinates_color)
+#     x, y = image_preprocessing()
+#     coordinates_color, coordinates_list = data_miner.method_1(x, y)
+#     data_visual.method_1(coordinates_list)
+#     data_visual.method_2(coordinates_color)
 
-    x_flat, y_flat, hist_flat = data_miner.method_2(x)
-    data_visual.method_3(x_flat, y_flat, hist_flat)
+#     x_flat, y_flat, hist_flat = data_miner.method_2(x)
+#     data_visual.method_3(x_flat, y_flat, hist_flat)
 
-    data_visual.method_4(coordinates_color)
-    print("here")
-    data_visual.method_5()
+#     data_visual.method_4(coordinates_color)
+#     print("here")
+#     data_visual.method_5()
