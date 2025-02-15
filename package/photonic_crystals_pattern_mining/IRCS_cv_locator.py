@@ -10,7 +10,8 @@ from matplotlib import pyplot as plt
 def image_preprocessing(path_dir = './dataset', SUB_TRACK_OUTSIDE = True, g_blur_ksize = (5, 5), g_blur_sigmaX = 0, 
                         find_circle_canny_lower_threshold = 5, find_circle_canny_upper_threshold = 15, second_zoom_in_factor = 40, 
                         find_circle_no_circle_canny_lower = 20, find_circle_no_circle_canny_upper = 25, 
-                        find_radius_canny_lower_threshold = 5, find_radius_canny_upper_threshold = 15):
+                        find_radius_canny_lower_threshold = 5, find_radius_canny_upper_threshold = 15, 
+                        r_blur_ksize = (5, 5), r_blur_sigmaX = 0, r_canny_blur = (40, 40)):
 
     def find_circle_threshold_ver(image_path, TARGET_IMAGE_SIZE):
         # preprocess
@@ -88,9 +89,9 @@ def image_preprocessing(path_dir = './dataset', SUB_TRACK_OUTSIDE = True, g_blur
         # preprocess
         hh, ww = img.shape[:2]
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        gaussian_blur = cv2.GaussianBlur(gray, (5, 5), 0) # TODO
-        canny = cv2.Canny(gaussian_blur, find_radius_canny_lower_threshold, find_radius_canny_upper_threshold) # TODO
-        blur = cv2.blur(canny, (40, 40)) # TODO
+        gaussian_blur = cv2.GaussianBlur(gray, r_blur_ksize, r_blur_sigmaX)
+        canny = cv2.Canny(gaussian_blur, find_radius_canny_lower_threshold, find_radius_canny_upper_threshold)
+        blur = cv2.blur(canny, r_canny_blur)
 
         # get the (largest) contour
         contours = cv2.findContours(blur, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
