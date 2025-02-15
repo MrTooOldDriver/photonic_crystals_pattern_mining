@@ -508,7 +508,7 @@ class data_visualization:
         fig.show()
 
 
-    def method_4(self, coordinates_color, out_dir = "output_density"):
+    def method_4(self, coordinates_color, molecular_imprinting_name, out_dir = "output_density"):
         import numpy as np
         import os
         import plotly.graph_objects as go
@@ -618,6 +618,6 @@ class data_visualization:
 #     x_flat, y_flat, hist_flat = data_miner.method_2(x)
 #     data_visual.method_3(x_flat, y_flat, hist_flat)
 
-#     data_visual.method_4(coordinates_color)
+#     data_visual.method_4(coordinates_color, molecular_imprinting_name)
 #     print("here")
 #     data_visual.method_5()
