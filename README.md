@@ -26,3 +26,6 @@ Those 3 ipynb are top priotiry to be completed with. They are image feature extr
 
 [IRCS_SIFT_PATTERN.ipynb](IRCS_SIFT_PATTERN.ipynb) [IRCS_SIFT_PATTERN_DENSITY_MAP.ipynb](IRCS_SIFT_PATTERN_DENSITY_MAP.ipynb) [IRCS_SIFT_PATTERN_ALIGNMENT.ipynb](IRCS_SIFT_PATTERN_ALIGNMENT.ipynb)
 Those 3 ipynb are more of additional visulization of SIFT. Do this three later.
+
+
+
