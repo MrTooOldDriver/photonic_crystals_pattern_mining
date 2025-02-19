@@ -24,7 +24,7 @@ setup(
         "scikit-learn",
         "scikit-image",
         "scipy",
-        "kaleido"
+        "kaleido==0.1.0"
     ]
 
 

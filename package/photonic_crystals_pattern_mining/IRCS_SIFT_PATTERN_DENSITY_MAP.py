@@ -40,7 +40,7 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
     def sift_features_vector(src, image_path, random_keypoints_upper: int = 2500, height_map=None):
         src = rgb2gray(src)
         img_adapteq = exposure.equalize_adapthist(src, clip_limit=0.03)
-        print(img_adapteq.shape)
+        # print(img_adapteq.shape)
         descriptor_extractor = SIFT()
         # descriptor_extractor = ORB(n_keypoints=50)
         descriptor_extractor.detect_and_extract(img_adapteq)
@@ -65,7 +65,7 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
         plt.close()
         if height_map is not None:
             descriptors = np.hstack((descriptors, np.array(height_value).reshape(-1, 1)))
-        print(descriptors.shape)
+        # print(descriptors.shape)
         return descriptors, keypoints
 
     def generate_height_map(size, offset: int = 315):
