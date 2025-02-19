@@ -79,7 +79,8 @@ def image_preprocessing(img_path = './output/rgb', output_path: str = './output/
 
         # Calculate the corresponding z coordinates
         # Note: For points outside the sphere, this will be NaN
-        z = np.sqrt(r**2 - x**2 - y**2)
+        z_square = np.clip(r**2 - x**2 - y**2, 0, None)
+        z = np.sqrt(z_square)
 
         # We set points outside the sphere to zero height for visualization
         z[np.isnan(z)] = 0
