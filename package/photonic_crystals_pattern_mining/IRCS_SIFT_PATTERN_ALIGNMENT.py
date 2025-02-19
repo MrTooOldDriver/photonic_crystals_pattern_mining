@@ -278,7 +278,7 @@ def image_preprocessing(img_path: str = './output/rgb', output_path: str = './ou
 # data mining
 
 class data_mining:
-    def method_1(self, x, y, color_discrete_map: map = None):
+    def method_1(self, x, y, color_discrete_map: map = None, angle_bin = 20, radii_bin = 200):
         import numpy as np
         import logging
         import plotly.io as pio
@@ -300,8 +300,7 @@ class data_mining:
         # Assuming all images have the same size
         image_center = [200, 200]
 
-        angle_bin = 20
-        radii_bin = 200
+        
 
         # Initialize lists to store all angles and radii for each class
         all_angles_classes = {label: [] for label in color_discrete_map.keys()}
@@ -344,7 +343,7 @@ class data_mining:
         
         return all_angles_classes, angle_bin, all_radii_classes, radii_bin, color_discrete_map
     
-    def method_2(self, x, y, color_discrete_map: map = None):
+    def method_2(self, x, y, color_discrete_map: map = None, angle_bin = 45):
         import numpy as np
         import logging
         # Assuming y is a list of strings corresponding to the labels of each point in x
@@ -362,7 +361,7 @@ class data_mining:
         # Assuming all images have the same size
         image_center = [200, 200]
 
-        angle_bin = 45
+        
 
         # Initialize lists to store all angles for each class
         all_angles_classes = {label: [] for label in color_discrete_map.keys()}
@@ -398,7 +397,7 @@ class data_mining:
         return all_angles_classes, angle_bin, color_discrete_map
         
 
-    def method_3(self, x, y, color_discrete_map: map = None):
+    def method_3(self, x, y, color_discrete_map: map = None, radii_bin = 30):
         import numpy as np
         # plot line graph for radii
 
@@ -415,7 +414,7 @@ class data_mining:
         # Calculate the center of the image
         image_center = [200, 200]
 
-        radii_bin = 30
+        
 
         # Initialize lists to store all radii for each class
         all_radii_classes = {label: [] for label in color_discrete_map.keys()}
