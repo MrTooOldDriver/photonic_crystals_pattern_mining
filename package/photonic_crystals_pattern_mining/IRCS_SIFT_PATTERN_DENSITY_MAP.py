@@ -510,8 +510,8 @@ class data_visualization:
 
     def method_4(self, coordinates_color, molecular_imprinting_name, out_dir = "output_density"):
         import numpy as np
-        import os
         import plotly.graph_objects as go
+        import os
         os.makedirs(f"./{out_dir}", exist_ok=True)
         for index in [0,1,2]:
             label, keypoints = list(coordinates_color.items())[index]
@@ -561,13 +561,14 @@ class data_visualization:
             
             fig.show()
             
-            # TODO  only works when python-kaleido=0.1.0
             fig.write_image(f"./{out_dir}/{molecular_imprinting_name}-{label}.png", height=1000, width=1000)
 
 
     def method_5(self, out_dir = "output_density"):
         import matplotlib.pyplot as plt
         import matplotlib.image as mpimg
+        import os
+        os.makedirs(f"./{out_dir}", exist_ok=True)
         image_names = [
             'DMMP-DMMP', 'DMMP-NaBF4', 'DMMP-KF6P',
             'MP-MP', 'MP-NaBF4', 'MP-KF6P',
