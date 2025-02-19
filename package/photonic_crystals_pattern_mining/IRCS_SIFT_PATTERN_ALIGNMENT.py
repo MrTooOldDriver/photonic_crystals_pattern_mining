@@ -513,6 +513,7 @@ class data_visualization:
         import numpy as np
         import plotly.graph_objects as go
         from scipy.ndimage import gaussian_filter1d
+        import os
         # Plot the distribution of angles for each class as a smoothed line graph
         fig = go.Figure()
         for label, angles in all_angles_classes.items():
@@ -534,13 +535,15 @@ class data_visualization:
 
 
         fig.show()
-
+        if not os.path.exists("output_distribution"):
+            os.makedirs("output_distribution")
         fig.write_image("output_distribution/%s-line.png" % molecular_imprinting_name, height=500, width=500)
 
     def method_3(self, all_radii_classes, radii_bin, color_discrete_map, molecular_imprinting_name):
         import numpy as np
         import plotly.graph_objects as go
         from scipy.ndimage import gaussian_filter1d
+        import os
         # Plot the distribution of radii for each class as a smoothed line graph
         fig = go.Figure()
         for label, radii in all_radii_classes.items():
@@ -561,6 +564,8 @@ class data_visualization:
 
         fig.show()
 
+        if not os.path.exists("output_distribution"):
+            os.makedirs("output_distribution")
         fig.write_image("output_distribution/%s-radii-line.png" % molecular_imprinting_name, height=500, width=500)
 
     def method_4(self, all_angles_classes, angle_bin, color_discrete_map, molecular_imprinting_name):
@@ -568,6 +573,7 @@ class data_visualization:
         import plotly.graph_objects as go
         from scipy.ndimage import gaussian_filter1d
         from scipy.fft import fft, fftfreq
+        import os
 
         # Apply Fourier Transform to the smoothed data and visualize the result
         fig_fft = go.Figure()
@@ -602,6 +608,8 @@ class data_visualization:
 
         fig_fft.show()
 
+        if not os.path.exists("output_distribution"):
+            os.makedirs("output_distribution")
         fig_fft.write_image("output_distribution/%s-fourier.png" % molecular_imprinting_name, height=500, width=500)
 
     def method_5(self, img_dir: str = "./output_distribution", save_path: str = './output_distribution/merged_angle_image.png'):
