@@ -72,19 +72,18 @@ Note that the names of subfolders and images are irrelevant; however, the top fo
 
 The first step is to detect all crystal from raw images. Raw images should be located under folder `dataset` following the file structure mentioned above. All outputs should be generated into the `output` folder. 
 
-Please refactor all three files:
-[IRCS_cv_locator_new_data_temporal.py](./src/IRCS_cv_locator_new_data_temporal.py) [IRCS_cv_locator_new_data.py](./src/IRCS_cv_locator_new_data.py) [IRCS_cv_locator.py](./src/IRCS_cv_locator.py), and the example usecase: [example_usecase.ipynb](./example_usecase.ipynb). 
+Please refer to the three files: [IRCS_cv_locator.py](./src/IRCS_cv_locator.py), 
+[IRCS_cv_locator_new_data_temporal.py](./src/IRCS_cv_locator_new_data_temporal.py), and [IRCS_cv_locator_new_data.py](./src/IRCS_cv_locator_new_data.py) , and the example usecase: [example_usecase.ipynb](./example_usecase.ipynb). 
 
 
 
 # Feature extration
 
-The major part of this project is to using detected images from /output then do all the processing。
-Please refer to the example usecase: [example_usecase.ipynb](./example_usecase.ipynb). 
+The major part of this project is to using detected images from /output then do all the processing. Please refer to the example usecase: [example_usecase.ipynb](./example_usecase.ipynb). 
 
-IRCS_CANNY_TSNE, IRCS_HOG_TSNE, and IRCS_SIFT_TSNE are image feature extraction package with visulization.
+[IRCS_CANNY_TSNE](./package/photonic_crystals_pattern_mining/IRCS_CANNY_TSNE.py), [IRCS_HOG_TSNE](./package/photonic_crystals_pattern_mining/IRCS_HOG_TSNE.py), and [IRCS_SIFT_TSNE](./package/photonic_crystals_pattern_mining/IRCS_SIFT_TSNE.py) are image feature extraction package with visulization.
 
-IRCS_SIFT_PATTERN, IRCS_SIFT_PATTERN_DENSITY_MAP, and IRCS_SIFT_PATTERN_ALIGNMENT are more of additional visulization of SIFT. Please use these packages after you run IRCS_SIFT_TSNE. 
+[IRCS_SIFT_PATTERN](./package/photonic_crystals_pattern_mining/IRCS_SIFT_PATTERN.py), [IRCS_SIFT_PATTERN_DENSITY_MAP](./package/photonic_crystals_pattern_mining/IRCS_SIFT_PATTERN_DENSITY_MAP.py), and [IRCS_SIFT_PATTERN_ALIGNMENT](./package/photonic_crystals_pattern_mining/IRCS_SIFT_PATTERN_ALIGNMENT.py) are more of additional visulization of SIFT. Please use these packages after you run IRCS_SIFT_TSNE. 
 
 
 
