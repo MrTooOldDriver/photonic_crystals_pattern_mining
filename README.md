@@ -5,9 +5,9 @@
 <p align="center">
     <a href='https://www.linkedin.com/in/hantao-zhong/' target='_blank'>Hantao Zhong¹²</a>&emsp;
     <a href='https://www.linkedin.com/in/guanlin-li/' target='_blank'>Guanlin Li³</a>&emsp;
-    <a href='TODO' target='_blank'>Yumeng Gan¹</a>&emsp; 
-    <a href='TODO' target='_blank'>Jiecheng Cui⁴*</a>&emsp;
-    <a href='TODO' target='_blank'>Changxu Lin¹*</a>&emsp;
+    Yumeng Gan¹</a>&emsp; 
+    Jiecheng Cui⁴*</a>&emsp;
+    Changxu Lin¹*</a>&emsp;
     <br> *Corresponding author
     <br>
     ¹Xiamen University&emsp;²University of Cambridge&emsp;³University of Pennsylvania&emsp;
