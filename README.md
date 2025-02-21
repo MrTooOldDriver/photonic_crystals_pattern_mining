@@ -3,16 +3,15 @@
 </h1>
 
 <p align="center">
-    <a href='https://www.linkedin.com/in/hantao-zhong/' target='_blank'>Hantao Zhong†</a>&emsp;
-    <a href='TODO' target='_blank'>Yumeng Gan†</a>&emsp; 
-    <a href='TODO' target='_blank'>Jiecheng Cui†</a>&emsp;
-    <a href='https://www.linkedin.com/in/guanlin-li/' target='_blank'>Guanlin Li‡</a>&emsp;
-    <a href='TODO' target='_blank'>Changxu Lin*</a>&emsp;
+    <a href='https://www.linkedin.com/in/hantao-zhong/' target='_blank'>Hantao Zhong¹²</a>&emsp;
+    <a href='https://www.linkedin.com/in/guanlin-li/' target='_blank'>Guanlin Li³</a>&emsp;
+    <a href='TODO' target='_blank'>Yumeng Gan¹</a>&emsp; 
+    <a href='TODO' target='_blank'>Jiecheng Cui⁴*</a>&emsp;
+    <a href='TODO' target='_blank'>Changxu Lin¹*</a>&emsp;
+    <br> *Corresponding author
     <br>
-    †Equal Contribution&emsp; ‡Second author&emsp; *Corresponding author
-    <!-- <br>
-    Royal College of Art&emsp;University of Edinburgh&emsp;University of Cambridge&emsp;
-    University College London -->
+    ¹Xiamen University&emsp;²University of Cambridge&emsp;³University of Pennsylvania&emsp;
+    ⁴Zhejiang Normal University
 </p>
 
 
