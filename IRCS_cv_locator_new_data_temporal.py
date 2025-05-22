@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 
 SUB_TRACK_OUTSIDE = True
 
-ADJUST_WITH_CIRCLE_RADIUS = True
+ADJUST_WITH_CIRCLE_RADIUS = False
 
 def find_circle_threshold_ver(image_path, TARGET_IMAGE_SIZE, radius_limit):
     # preprocess
