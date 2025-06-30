@@ -102,8 +102,8 @@ enhance = True
 
 # type_of_analysis = "HOG_before_diff"
 # type_of_analysis = "HOG_after_diff"
-type_of_analysis = "CANNY"
-# type_of_analysis = "SIFT"
+# type_of_analysis = "CANNY"
+type_of_analysis = "SIFT"
 
 
 # pixels_per_cell = (10, 10)
@@ -361,15 +361,45 @@ print(pio.templates)
 pio.templates.default = 'plotly'
 
 # %%
+if (type_of_analysis == "HOG_before_diff" or type_of_analysis == "HOG_after_diff"):
+    fig = px.scatter_3d(df, x='PC1', y='PC2',z='PC3',  color='label', symbol='label', title='Hog TSNE %s Granularity=%s Sperplexity=%s' % (molecular_imprinting_name, str((int(1000 / pixels_per_cell[0]), int(1000 / pixels_per_cell[0]))), str(perplexity)), color_discrete_map={
+                    "DMMP": "red",
+                    "NaBF4": "green",
+                    "KF6P": "blue",
+                    "MPA": "goldenrod",
+                    "MP": "purple"},
+                    symbol_sequence= ['circle', 'circle', 'circle', 'circle'])
+    fig.show()
+elif (type_of_analysis == "CANNY"):
+    fig = px.scatter_3d(df, x='PC1', y='PC2',z='PC3',  color='label', symbol='label', title='Canny TSNE %s Granularity=%s Sperplexity=%s' % (molecular_imprinting_name, str(x[0][0].shape), str(perplexity)), color_discrete_map={
+                        "DMMP": "red",
+                        "NaBF4": "green",
+                        "KF6P": "blue",
+                        "MPA": "goldenrod",
+                        "MP": "purple"},
+                        symbol_sequence= ['circle', 'circle', 'circle', 'circle'],)
+    # fig.update_layout(scene=dict(
+    #     xaxis=dict(showticklabels=False),
+    #     yaxis=dict(showticklabels=False),
+    #     zaxis=dict(showticklabels=False)
+    # ))
+    fig.show()
+elif (type_of_analysis == "SIFT"):
+    fig = px.scatter_3d(df, x='PC1', y='PC2', z='PC3', color='label', symbol='label', title='%s SIFT' % (molecular_imprinting_name), color_discrete_map={
+                        "DMMP": "red",
+                        "NaBF4": "green",
+                        "KF6P": "blue",
+                        "MPA": "goldenrod",
+                        "MP": "purple"},
+                        symbol_sequence= ['circle', 'circle', 'circle', 'circle'])
+    # fig.update_traces(marker=dict(size=6),selector=dict(mode='markers'))
+    # fig.update_layout(scene=dict(
+    #     xaxis=dict(showticklabels=False),
+    #     yaxis=dict(showticklabels=False),
+    #     zaxis=dict(showticklabels=False)
+    # ))
+    fig.show()
 
-fig = px.scatter_3d(df, x='PC1', y='PC2',z='PC3',  color='label', symbol='label', title='Hog TSNE %s Granularity=%s Sperplexity=%s' % (molecular_imprinting_name, str((int(1000 / pixels_per_cell[0]), int(1000 / pixels_per_cell[0]))), str(perplexity)), color_discrete_map={
-                "DMMP": "red",
-                "NaBF4": "green",
-                "KF6P": "blue",
-                "MPA": "goldenrod",
-                "MP": "purple"},
-                symbol_sequence= ['circle', 'circle', 'circle', 'circle'])
-fig.show()
 
 # %%
 # Define the output path
