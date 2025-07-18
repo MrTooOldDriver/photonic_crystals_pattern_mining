@@ -6,12 +6,13 @@
     <a href='https://www.linkedin.com/in/hantao-zhong/' target='_blank'>Hantao Zhong¹²</a>&emsp;
     <a href='https://www.linkedin.com/in/guanlin-li/' target='_blank'>Guanlin Li³</a>&emsp;
     Yumeng Gan¹</a>&emsp; 
+    Yaxuan Luo⁵</a>&emsp; 
     Jiecheng Cui⁴*</a>&emsp;
     Changxu Lin¹*</a>&emsp;
     <br> *Corresponding author
     <br>
     ¹Xiamen University&emsp;²University of Cambridge&emsp;³University of Pennsylvania&emsp;
-    ⁴Zhejiang Normal University
+    ⁴Zhejiang Normal University&emsp; ⁵Wuhan Institute of Technology
 </p>
 
 
